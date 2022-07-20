@@ -155,4 +155,102 @@ describe("[UNIT]: Category Tests", () => {
     expect(category.created_at).toBeInstanceOf(Date);
     expect(category.created_at.toISOString()).toEqual(date.toISOString());
   });
+
+  it("should update a category", () => {
+    const props = {
+      name: "Movie",
+      description: "description",
+      is_active: true,
+      created_at: new Date(),
+    };
+
+    const category = new Category(props);
+
+    category.update({
+      name: "Updated Movie",
+      description: "updated description",
+    });
+
+    expect(category.props).toStrictEqual({
+      name: "Updated Movie",
+      description: "updated description",
+      is_active: true,
+      created_at: new Date(),
+    });
+
+    category.update({
+      name: "Updated Movie 2",
+    });
+
+    expect(category.props).toStrictEqual({
+      name: "Updated Movie 2",
+      description: null,
+      is_active: true,
+      created_at: new Date(),
+    });
+
+    category.update({
+      name: "Updated Movie 3",
+      description: null,
+    });
+
+    expect(category.props).toStrictEqual({
+      name: "Updated Movie 3",
+      description: null,
+      is_active: true,
+      created_at: new Date(),
+    });
+
+    category.update({
+      name: "Updated Movie 4",
+      description: undefined,
+    });
+
+    expect(category.props).toStrictEqual({
+      name: "Updated Movie 4",
+      description: null,
+      is_active: true,
+      created_at: new Date(),
+    });
+  });
+
+  it("should activate a category", () => {
+    const props = {
+      name: "Movie",
+      description: "description",
+      is_active: false,
+      created_at: new Date(),
+    };
+
+    const category = new Category(props);
+
+    category.activate();
+
+    expect(category.props).toStrictEqual({
+      name: "Movie",
+      description: "description",
+      is_active: true,
+      created_at: new Date(),
+    });
+  });
+
+  it("should deactivate a category", () => {
+    const props = {
+      name: "Movie",
+      description: "description",
+      is_active: true,
+      created_at: new Date(),
+    };
+
+    const category = new Category(props);
+
+    category.deactivate();
+
+    expect(category.props).toStrictEqual({
+      name: "Movie",
+      description: "description",
+      is_active: false,
+      created_at: new Date(),
+    });
+  });
 });

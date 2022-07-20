@@ -3,7 +3,7 @@ import { InvalidUuidError } from "../../errors/invalid-uuid.error";
 import { ValueObject } from "./value-object";
 
 export class UniqueEntityId extends ValueObject<string> {
-  constructor(readonly id?: string) {
+  constructor(id?: string) {
     super(id ?? uuidv4());
     this.validate();
   }
