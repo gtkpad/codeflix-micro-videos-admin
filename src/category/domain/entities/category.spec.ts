@@ -56,11 +56,11 @@ describe("[UNIT]: Category Tests", () => {
     data.forEach((item) => {
       const category = new Category(item.props, item.id);
       expect(category.id).not.toBeNull();
-      expect(category.id).toBeInstanceOf(UniqueEntityId);
+      expect(category.uniqueEntityId).toBeInstanceOf(UniqueEntityId);
     });
   });
 
-  it("should test getter of name field", () => {
+  it("should test getter and setter of name field", () => {
     const props = {
       name: "Movie",
     };
@@ -68,6 +68,10 @@ describe("[UNIT]: Category Tests", () => {
     const category = new Category(props);
 
     expect(category.name).toEqual(props.name);
+
+    category["name"] = "Movie 2";
+
+    expect(category.name).toEqual("Movie 2");
   });
 
   it("should test getter and setter of description field", () => {

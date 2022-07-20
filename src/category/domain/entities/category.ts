@@ -22,6 +22,10 @@ export class Category extends Entity<CategoryProperties> {
     return this.props.name;
   }
 
+  set name(value: string) {
+    this.props.name = value;
+  }
+
   get description(): string {
     return this.props.description;
   }
@@ -43,7 +47,7 @@ export class Category extends Entity<CategoryProperties> {
   }
 
   public update(props: Pick<CategoryProperties, "name" | "description">) {
-    this.props.name = props.name;
+    this.name = props.name;
     this.description = props.description;
   }
 
