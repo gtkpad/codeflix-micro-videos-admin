@@ -1,5 +1,7 @@
+import { ValidatorRules } from "../../../@seedwork/validators/validator-rules";
 import { Entity } from "../../../@seedwork/domain/entity/entity";
 import { UniqueEntityId } from "../../../@seedwork/domain/value-objects/unique-entity-id.vo";
+import { CategoryValidatorFactory } from "../validators/category.validator";
 
 export type CategoryProperties = {
   name: string;
@@ -16,6 +18,15 @@ export class Category extends Entity<CategoryProperties> {
     this.props.description = this.props.description ?? null;
     this.props.is_active = this.props.is_active ?? true;
     this.props.created_at = this.props.created_at ?? new Date();
+  }
+
+  public update(props: Pick<CategoryProperties, "name" | "description">) {
+    this.name = props.name;
+    this.description = props.description;
+  }
+
+  static validate(props: CategoryProperties) {
+    return CategoryValidatorFactory.create().validate(props);
   }
 
   get name(): string {
@@ -44,11 +55,6 @@ export class Category extends Entity<CategoryProperties> {
 
   get created_at(): Date {
     return this.props.created_at;
-  }
-
-  public update(props: Pick<CategoryProperties, "name" | "description">) {
-    this.name = props.name;
-    this.description = props.description;
   }
 
   public activate() {

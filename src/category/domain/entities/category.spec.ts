@@ -3,6 +3,8 @@ import { UniqueEntityId } from "../../../@seedwork/domain/value-objects/unique-e
 
 describe("[UNIT]: Category Tests", () => {
   beforeEach(() => {
+    Category.validate = jest.fn();
+
     jest.useFakeTimers();
     jest.setSystemTime(new Date());
   });
@@ -20,7 +22,7 @@ describe("[UNIT]: Category Tests", () => {
     };
 
     const category = new Category(props);
-
+    expect(Category.validate).toHaveBeenCalledTimes(1);
     expect(category.props).toStrictEqual(props);
   });
 
@@ -38,6 +40,7 @@ describe("[UNIT]: Category Tests", () => {
 
     const category = new Category(props);
 
+    expect(Category.validate).toHaveBeenCalledTimes(1);
     expect(category.props).toStrictEqual(expectData);
   });
 
@@ -56,6 +59,7 @@ describe("[UNIT]: Category Tests", () => {
     data.forEach((item) => {
       const category = new Category(item.props, item.id);
       expect(category.id).not.toBeNull();
+      expect(Category.validate).toHaveBeenCalled();
       expect(category.uniqueEntityId).toBeInstanceOf(UniqueEntityId);
     });
   });
@@ -216,6 +220,7 @@ describe("[UNIT]: Category Tests", () => {
       is_active: true,
       created_at: new Date(),
     });
+    expect(Category.validate).toHaveBeenCalledTimes(5);
   });
 
   it("should activate a category", () => {
