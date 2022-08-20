@@ -4,6 +4,7 @@ RUN mkdir -p /usr/share/man/man1 && \
   echo 'deb http://ftp.debian.org/debian stretch-backports main' | tee /etc/apt/sources.list.d/stretch-backports.list && \
   apt-get update && apt-get install -y \
   git \
+  procps \
   ca-certificates \
   openjdk-11-jre \
   zsh \
