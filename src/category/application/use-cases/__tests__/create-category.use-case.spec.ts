@@ -11,8 +11,9 @@ describe("[UNIT] CreateCategoryUseCase", () => {
   });
 
   it("should create a category", async () => {
-    let output = await createCategoryUseCase.execute({ name: "Category 1" });
     const spyInsert = jest.spyOn(categoryRepository, "insert");
+
+    let output = await createCategoryUseCase.execute({ name: "Category 1" });
 
     expect(spyInsert).toHaveBeenCalledTimes(1);
     expect(output).toStrictEqual({
