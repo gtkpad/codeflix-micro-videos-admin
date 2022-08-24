@@ -4,12 +4,12 @@ import { CategoryInMemoryRepository } from "../../../infra/repository/category-i
 import { GetCategoryUseCase } from "../get-category.use-case";
 
 describe("[UNIT] GetCategoryUseCase", () => {
-  let useCase: GetCategoryUseCase;
+  let useCase: GetCategoryUseCase.UseCase;
   let categoryRepository: CategoryInMemoryRepository;
 
   beforeEach(() => {
     categoryRepository = new CategoryInMemoryRepository();
-    useCase = new GetCategoryUseCase(categoryRepository);
+    useCase = new GetCategoryUseCase.UseCase(categoryRepository);
   });
 
   it("should throws error when entity not found", async () => {

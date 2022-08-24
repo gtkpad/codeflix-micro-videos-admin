@@ -1,0 +1,31 @@
+{
+  "name": "micro-videos",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "class-validator": "^0.13.2",
+    "loadsh": "^0.0.4",
+    "uuid": "^8.3.2"
+  },
+  "workspaces": [
+    "./src/@core",
+    "./src/nestjs"
+  ],
+  "scripts": {
+    "prestart:dev": "npm run build -w @codeflix/micro-videos",
+    "start:dev": "npm run build:w -w @codeflix/micro-videos & npm run start:dev -w nestjs",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gtkpad/codeflix-micro-videos-admin.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gtkpad/codeflix-micro-videos-admin/issues"
+  },
+  "homepage": "https://github.com/gtkpad/codeflix-micro-videos-admin#readme"
+}

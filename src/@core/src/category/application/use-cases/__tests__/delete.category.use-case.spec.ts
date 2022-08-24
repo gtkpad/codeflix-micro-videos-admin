@@ -4,12 +4,14 @@ import { CategoryInMemoryRepository } from "../../../infra/repository/category-i
 import { DeleteCategoryUseCase } from "../delete-category.use-case";
 
 describe("[UNIT] DeleteCategoryUseCase", () => {
-  let deleteCategoryUseCase: DeleteCategoryUseCase;
+  let deleteCategoryUseCase: DeleteCategoryUseCase.UseCase;
   let categoryRepository: CategoryInMemoryRepository;
 
   beforeEach(() => {
     categoryRepository = new CategoryInMemoryRepository();
-    deleteCategoryUseCase = new DeleteCategoryUseCase(categoryRepository);
+    deleteCategoryUseCase = new DeleteCategoryUseCase.UseCase(
+      categoryRepository
+    );
   });
 
   it("should throws error when entity not found", async () => {

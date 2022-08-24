@@ -20,12 +20,14 @@ type Arrange = {
 };
 
 describe("[UNIT] UpdateCategoryUseCase", () => {
-  let updateCategoryUseCase: UpdateCategoryUseCase;
+  let updateCategoryUseCase: UpdateCategoryUseCase.UseCase;
   let categoryRepository: CategoryInMemoryRepository;
 
   beforeEach(() => {
     categoryRepository = new CategoryInMemoryRepository();
-    updateCategoryUseCase = new UpdateCategoryUseCase(categoryRepository);
+    updateCategoryUseCase = new UpdateCategoryUseCase.UseCase(
+      categoryRepository
+    );
   });
 
   it("should throws error when entity not found", async () => {

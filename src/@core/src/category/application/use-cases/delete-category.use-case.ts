@@ -1,19 +1,20 @@
 import { CategoryRepository } from "../../domain/repository/category.repository";
-import { CategoryOutput, CategoryOutputMapper } from "../dtos/category-output";
-import { UseCase } from "../../../@seedwork/application/use-case.interface";
+import { UseCaseInterface } from "../../../@seedwork/application/use-case.interface";
 
-export type Input = {
-  id: string;
-};
+export namespace DeleteCategoryUseCase {
+  export type Input = {
+    id: string;
+  };
 
-export type Output = void;
+  export type Output = void;
 
-export class DeleteCategoryUseCase implements UseCase<Input, Output> {
-  constructor(
-    private readonly categoryRepository: CategoryRepository.Repository
-  ) {}
+  export class UseCase implements UseCaseInterface<Input, Output> {
+    constructor(
+      private readonly categoryRepository: CategoryRepository.Repository
+    ) {}
 
-  public async execute(input: Input): Promise<Output> {
-    await this.categoryRepository.delete(input.id);
+    public async execute(input: Input): Promise<Output> {
+      await this.categoryRepository.delete(input.id);
+    }
   }
 }
