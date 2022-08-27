@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@nestjs/mapped-types": "*",
     "class-validator": "^0.13.2",
     "loadsh": "^0.0.4",
     "uuid": "^8.3.2"
