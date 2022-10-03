@@ -1,9 +1,9 @@
-import { Category } from "../../../domain/entities/category";
-import { CategoryRepository } from "../../../domain/repository/category.repository";
-import { CategoryInMemoryRepository } from "../../../infra/repository/category-in-memory.repository";
-import { ListCategoriesUseCase } from "../list-categories.use-case";
+import { Category } from '../../../domain/entities/category';
+import { CategoryRepository } from '../../../domain/repository/category.repository';
+import { CategoryInMemoryRepository } from '../../../infra/db/in-memory/category-in-memory.repository';
+import { ListCategoriesUseCase } from '../list-categories.use-case';
 
-describe("[UNIT] ListCategoriesUseCase", () => {
+describe('[UNIT] ListCategoriesUseCase', () => {
   let useCase: ListCategoriesUseCase.UseCase;
   let categoryRepository: CategoryInMemoryRepository;
 
@@ -12,7 +12,7 @@ describe("[UNIT] ListCategoriesUseCase", () => {
     useCase = new ListCategoriesUseCase.UseCase(categoryRepository);
   });
 
-  test("toOutput", () => {
+  test('toOutput', () => {
     let searchResult = new CategoryRepository.SearchResult({
       items: [],
       total: 1,
@@ -23,7 +23,7 @@ describe("[UNIT] ListCategoriesUseCase", () => {
       filter: null,
     });
 
-    let output = useCase["toOutput"](searchResult);
+    let output = useCase['toOutput'](searchResult);
 
     expect(output).toStrictEqual({
       items: [],
@@ -34,8 +34,8 @@ describe("[UNIT] ListCategoriesUseCase", () => {
     });
 
     const entity = new Category({
-      name: "Category 1",
-      description: "Category 1 description",
+      name: 'Category 1',
+      description: 'Category 1 description',
       is_active: true,
     });
     searchResult = new CategoryRepository.SearchResult({
@@ -47,7 +47,7 @@ describe("[UNIT] ListCategoriesUseCase", () => {
       sort_dir: null,
       filter: null,
     });
-    output = useCase["toOutput"](searchResult);
+    output = useCase['toOutput'](searchResult);
 
     expect(output).toStrictEqual({
       items: [entity.toJSON()],
@@ -58,16 +58,16 @@ describe("[UNIT] ListCategoriesUseCase", () => {
     });
   });
 
-  it("should returns output using empty input with categories ordered by created_at", async () => {
+  it('should returns output using empty input with categories ordered by created_at', async () => {
     const items = [
       new Category({
-        name: "Category 1",
-        description: "Category 1 description",
+        name: 'Category 1',
+        description: 'Category 1 description',
         is_active: true,
       }),
       new Category({
-        name: "Category 2",
-        description: "Category 2 description",
+        name: 'Category 2',
+        description: 'Category 2 description',
         is_active: true,
         created_at: new Date(Date.now() + 1000),
       }),
@@ -84,22 +84,22 @@ describe("[UNIT] ListCategoriesUseCase", () => {
     });
   });
 
-  it("should returns output using pagination, sort and filter", async () => {
+  it('should returns output using pagination, sort and filter', async () => {
     const items = [
       new Category({
-        name: "a",
+        name: 'a',
       }),
       new Category({
-        name: "AAA",
+        name: 'AAA',
       }),
       new Category({
-        name: "AaA",
+        name: 'AaA',
       }),
       new Category({
-        name: "b",
+        name: 'b',
       }),
       new Category({
-        name: "c",
+        name: 'c',
       }),
     ];
 
@@ -107,8 +107,8 @@ describe("[UNIT] ListCategoriesUseCase", () => {
     let output = await useCase.execute({
       page: 1,
       per_page: 2,
-      sort: "name",
-      filter: "a",
+      sort: 'name',
+      filter: 'a',
     });
     expect(output).toStrictEqual({
       items: [items[1].toJSON(), items[2].toJSON()],
@@ -121,8 +121,8 @@ describe("[UNIT] ListCategoriesUseCase", () => {
     output = await useCase.execute({
       page: 2,
       per_page: 2,
-      sort: "name",
-      filter: "a",
+      sort: 'name',
+      filter: 'a',
     });
     expect(output).toStrictEqual({
       items: [items[0].toJSON()],
@@ -135,9 +135,9 @@ describe("[UNIT] ListCategoriesUseCase", () => {
     output = await useCase.execute({
       page: 1,
       per_page: 2,
-      sort: "name",
-      sort_dir: "desc",
-      filter: "a",
+      sort: 'name',
+      sort_dir: 'desc',
+      filter: 'a',
     });
     expect(output).toStrictEqual({
       items: [items[0].toJSON(), items[2].toJSON()],
@@ -150,9 +150,9 @@ describe("[UNIT] ListCategoriesUseCase", () => {
     output = await useCase.execute({
       page: 2,
       per_page: 2,
-      sort: "name",
-      sort_dir: "desc",
-      filter: "a",
+      sort: 'name',
+      sort_dir: 'desc',
+      filter: 'a',
     });
     expect(output).toStrictEqual({
       items: [items[1].toJSON()],

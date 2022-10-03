@@ -1,33 +1,33 @@
-import { Category } from "../../../domain/entities/category";
-import { NotFoundError } from "../../../../@seedwork/domain/errors/not-found.error";
-import { CategoryInMemoryRepository } from "../../../infra/repository/category-in-memory.repository";
-import { DeleteCategoryUseCase } from "../delete-category.use-case";
+import { Category } from '../../../domain/entities/category';
+import { NotFoundError } from '../../../../@seedwork/domain/errors/not-found.error';
+import { CategoryInMemoryRepository } from '../../../infra/db/in-memory/category-in-memory.repository';
+import { DeleteCategoryUseCase } from '../delete-category.use-case';
 
-describe("[UNIT] DeleteCategoryUseCase", () => {
+describe('[UNIT] DeleteCategoryUseCase', () => {
   let deleteCategoryUseCase: DeleteCategoryUseCase.UseCase;
   let categoryRepository: CategoryInMemoryRepository;
 
   beforeEach(() => {
     categoryRepository = new CategoryInMemoryRepository();
     deleteCategoryUseCase = new DeleteCategoryUseCase.UseCase(
-      categoryRepository
+      categoryRepository,
     );
   });
 
-  it("should throws error when entity not found", async () => {
+  it('should throws error when entity not found', async () => {
     await expect(() =>
       deleteCategoryUseCase.execute({
-        id: "not-existent-id",
-      })
+        id: 'not-existent-id',
+      }),
     ).rejects.toThrow(
-      new NotFoundError("Entity with id not-existent-id not found")
+      new NotFoundError('Entity with id not-existent-id not found'),
     );
   });
 
-  it("should delete a category", async () => {
-    const spyDelete = jest.spyOn(categoryRepository, "delete");
+  it('should delete a category', async () => {
+    const spyDelete = jest.spyOn(categoryRepository, 'delete');
     const entity = new Category({
-      name: "Category 1",
+      name: 'Category 1',
     });
 
     categoryRepository.items = [entity];
