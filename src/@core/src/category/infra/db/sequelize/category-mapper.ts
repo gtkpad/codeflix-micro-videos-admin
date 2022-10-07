@@ -1,10 +1,22 @@
 import { Category } from '#category/domain';
-import { UniqueEntityId } from '#seedwork/domain';
+import {
+  EntityValidationError,
+  UniqueEntityId,
+  LoadEntityError,
+} from '#seedwork/domain';
 import { CategoryModel } from './category-model';
 
 export class CategoryModelMapper {
   static toEntity(model: CategoryModel): Category {
     const { id, ...otherData } = model.toJSON();
-    return new Category(otherData, new UniqueEntityId(id));
+    try {
+      return new Category(otherData, new UniqueEntityId(id));
+    } catch (e) {
+      if (e instanceof EntityValidationError) {
+        throw new LoadEntityError(e.error);
+      }
+
+      throw e;
+    }
   }
 }
