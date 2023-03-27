@@ -69,6 +69,7 @@
   "dependencies": {
     "chance": "^1.1.11",
     "class-validator": "^0.13.2",
+    "dotenv": "^16.0.3",
     "loadsh": "^0.0.4",
     "sequelize": "^6.21.4",
     "sequelize-typescript": "^2.1.3",
