@@ -1,5 +1,5 @@
-import { UniqueEntityId } from "@seedwork/domain/value-objects/unique-entity-id.vo";
-import { Entity } from "../entity/entity";
+import { UniqueEntityId } from '@seedwork/domain/value-objects/unique-entity-id.vo';
+import { Entity } from '../entity/entity';
 
 export interface RepositoryInterface<E extends Entity> {
   insert(entity: E): Promise<void>;
@@ -9,7 +9,7 @@ export interface RepositoryInterface<E extends Entity> {
   delete(id: string | UniqueEntityId): Promise<void>;
 }
 
-export type SortDirection = "asc" | "desc";
+export type SortDirection = 'asc' | 'desc';
 
 export type SearchProps<Filter = string> = {
   page?: number;
@@ -72,7 +72,7 @@ export class SearchParams<Filter = string> {
 
   private set sort(value: string | null) {
     this._sort =
-      value === null || value === undefined || value === "" ? null : `${value}`;
+      value === null || value === undefined || value === '' ? null : `${value}`;
   }
 
   get sort_dir(): SortDirection | null {
@@ -88,7 +88,7 @@ export class SearchParams<Filter = string> {
     const direction = `${value}`.toLowerCase();
 
     this._sort_dir =
-      direction !== "asc" && direction !== "desc" ? "asc" : direction;
+      direction !== 'asc' && direction !== 'desc' ? 'asc' : direction;
   }
 
   get filter(): Filter | null {
@@ -97,7 +97,7 @@ export class SearchParams<Filter = string> {
 
   private set filter(value: Filter | null) {
     this._filter =
-      value === null || value === undefined || (value as unknown) === ""
+      value === null || value === undefined || (value as unknown) === ''
         ? null
         : (`${value}` as any);
   }
@@ -134,9 +134,9 @@ export class SearchResult<E extends Entity = Entity, Filter = string> {
     this.filter = props.filter;
   }
 
-  toJSON() {
+  toJSON(forceEntity = false) {
     return {
-      items: this.items,
+      items: forceEntity ? this.items.map((item) => item.toJSON()) : this.items,
       total: this.total,
       current_page: this.current_page,
       per_page: this.per_page,
@@ -152,7 +152,7 @@ export interface SearchableRepositoryInterface<
   E extends Entity,
   Filter = string,
   SearchInput = SearchParams,
-  SearchOutput = SearchResult<E, Filter>
+  SearchOutput = SearchResult<E, Filter>,
 > extends RepositoryInterface<E> {
   sortableFields: string[];
   search(props: SearchInput): Promise<SearchOutput>;

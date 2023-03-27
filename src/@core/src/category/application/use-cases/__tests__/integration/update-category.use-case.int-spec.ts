@@ -1,7 +1,11 @@
-import { Category } from '../../../domain/entities/category';
-import { NotFoundError } from '../../../../@seedwork/domain/errors/not-found.error';
-import { CategoryInMemoryRepository } from '../../../infra/db/in-memory/category-in-memory.repository';
-import { UpdateCategoryUseCase } from '../update-category.use-case';
+import { Category } from '../../../../domain/entities/category';
+import { NotFoundError } from '../../../../../@seedwork/domain/errors/not-found.error';
+import { CategoryInMemoryRepository } from '../../../../infra/db/in-memory/category-in-memory.repository';
+import { UpdateCategoryUseCase } from '../../update-category.use-case';
+import { setupSequelize } from '#seedwork/infra/testing/helpers/db';
+import { CategorySequelize } from '#category/infra/db/sequelize/category-sequelize';
+import Chance from 'chance';
+const chance = Chance();
 
 type Arrange = {
   input: {
@@ -19,12 +23,15 @@ type Arrange = {
   };
 };
 
-describe('[UNIT] UpdateCategoryUseCase', () => {
+describe('[INTEGRATION] UpdateCategoryUseCase', () => {
+  setupSequelize({ models: [CategorySequelize.CategoryModel] });
   let updateCategoryUseCase: UpdateCategoryUseCase.UseCase;
-  let categoryRepository: CategoryInMemoryRepository;
+  let categoryRepository: CategorySequelize.CategoryRepository;
 
   beforeEach(() => {
-    categoryRepository = new CategoryInMemoryRepository();
+    categoryRepository = new CategorySequelize.CategoryRepository(
+      CategorySequelize.CategoryModel,
+    );
     updateCategoryUseCase = new UpdateCategoryUseCase.UseCase(
       categoryRepository,
     );
@@ -37,122 +44,125 @@ describe('[UNIT] UpdateCategoryUseCase', () => {
         name: 'category 1',
       }),
     ).rejects.toThrow(
-      new NotFoundError('Entity with id not-existent-id not found'),
+      new NotFoundError('Entity Not Found using ID not-existent-id'),
     );
   });
 
-  it('should update a category', async () => {
-    const spyUpdate = jest.spyOn(categoryRepository, 'update');
-    const entity = new Category({
+  describe('should update a category', () => {
+    const item = {
+      id: chance.guid({ version: 4 }),
       name: 'Category 1',
-    });
+      description: null,
+      is_active: true,
+      created_at: new Date(),
+    };
 
-    categoryRepository.items = [entity];
+    beforeEach(async () => {
+      await CategorySequelize.CategoryModel.factory().create(item);
+    });
 
     const arrange: Arrange[] = [
       {
         input: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
         },
         expected: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
           description: null,
           is_active: true,
-          created_at: entity.created_at,
+          created_at: item.created_at,
         },
       },
       {
         input: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
           description: 'Category 2 description',
         },
         expected: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
           description: 'Category 2 description',
           is_active: true,
-          created_at: entity.created_at,
+          created_at: item.created_at,
         },
       },
       {
         input: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
         },
         expected: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
           description: null,
           is_active: true,
-          created_at: entity.created_at,
+          created_at: item.created_at,
         },
       },
       {
         input: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
           is_active: false,
         },
         expected: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
           description: null,
           is_active: false,
-          created_at: entity.created_at,
+          created_at: item.created_at,
         },
       },
       {
         input: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
         },
         expected: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
           description: null,
-          is_active: false,
-          created_at: entity.created_at,
+          is_active: true,
+          created_at: item.created_at,
         },
       },
       {
         input: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
           is_active: true,
         },
         expected: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
           description: null,
           is_active: true,
-          created_at: entity.created_at,
+          created_at: item.created_at,
         },
       },
       {
         input: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
           description: 'Category 2 description',
           is_active: false,
         },
         expected: {
-          id: entity.id,
+          id: item.id,
           name: 'Category 2',
           description: 'Category 2 description',
           is_active: false,
-          created_at: entity.created_at,
+          created_at: item.created_at,
         },
       },
     ];
-    let calledTimes = 0;
-    for (const i of arrange) {
-      calledTimes++;
-      const output = await updateCategoryUseCase.execute(i.input);
-      expect(spyUpdate).toHaveBeenCalledTimes(calledTimes);
-      expect(output).toStrictEqual(i.expected);
-    }
+
+    test.each(arrange)("when value is '%j'", async ({ input, expected }) => {
+      const output = await updateCategoryUseCase.execute(input);
+      expect(output).toStrictEqual(expected);
+    });
   });
 });
