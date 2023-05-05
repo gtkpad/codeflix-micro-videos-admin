@@ -1,7 +1,7 @@
-FROM node:14.17.0-slim
+FROM node:16.16.0-slim
 
 RUN mkdir -p /usr/share/man/man1 && \
-  echo 'deb http://ftp.debian.org/debian stretch-backports main' | tee /etc/apt/sources.list.d/stretch-backports.list && \
+  # echo 'deb http://ftp.debian.org/debian stretch-backports main' | tee /etc/apt/sources.list.d/stretch-backports.list && \
   apt-get update && apt-get install -y \
   git \
   procps \

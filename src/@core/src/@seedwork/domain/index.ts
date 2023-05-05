@@ -3,7 +3,6 @@
 export * from './entity';
 export * from './errors';
 export * from './repository';
-export * from './tests';
 export * from './util';
 export * from './validators';
 export * from './value-objects';
