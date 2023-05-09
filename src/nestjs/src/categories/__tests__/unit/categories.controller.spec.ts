@@ -3,10 +3,11 @@ import {
   GetCategoryUseCase,
   ListCategoriesUseCase,
 } from '@codeflix/micro-videos/category/application';
-import { SortDirection } from '@codeflix/micro-videos/dist/@seedwork/domain/repository/repository-contracts';
-import { CategoriesController } from './categories.controller';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { SortDirection } from '@codeflix/micro-videos/@seedwork/domain';
+import { CategoriesController } from '../../categories.controller';
+import { CreateCategoryDto } from '../../dto/create-category.dto';
+import { UpdateCategoryDto } from '../../dto/update-category.dto';
+import { CategoryPresenter } from '../../presenter/category.presenter';
 
 describe('CategoriesController', () => {
   let controller: CategoriesController;
@@ -16,7 +17,7 @@ describe('CategoriesController', () => {
   });
 
   it('should creates a category', async () => {
-    const expectedOutput: CreateCategoryUseCase.Output = {
+    const output: CreateCategoryUseCase.Output = {
       id: '08b1c1ab-b817-4f7d-9ced-36c87c724d05',
       name: 'Movie',
       description: 'some description',
@@ -25,7 +26,7 @@ describe('CategoriesController', () => {
     };
 
     const mockCreateUseCase = {
-      execute: jest.fn().mockReturnValue(Promise.resolve(expectedOutput)),
+      execute: jest.fn().mockReturnValue(Promise.resolve(output)),
     };
     //@ts-expect-error
     controller['createUseCase'] = mockCreateUseCase;
@@ -36,15 +37,16 @@ describe('CategoriesController', () => {
       is_active: true,
     };
 
-    const output = await controller.create(input);
+    const presenter = await controller.create(input);
 
     expect(mockCreateUseCase.execute).toHaveBeenCalledWith(input);
-    expect(output).toStrictEqual(expectedOutput);
+    expect(presenter).toBeInstanceOf(CategoryPresenter);
+    expect(presenter).toStrictEqual(new CategoryPresenter(output));
   });
 
   it('should update a category', async () => {
     const id = '08b1c1ab-b817-4f7d-9ced-36c87c724d05';
-    const expectedOutput: CreateCategoryUseCase.Output = {
+    const output: CreateCategoryUseCase.Output = {
       id,
       name: 'Movie',
       description: 'some description',
@@ -53,7 +55,7 @@ describe('CategoriesController', () => {
     };
 
     const mockUpdateUseCase = {
-      execute: jest.fn().mockReturnValue(Promise.resolve(expectedOutput)),
+      execute: jest.fn().mockReturnValue(Promise.resolve(output)),
     };
     //@ts-expect-error
     controller['updateUseCase'] = mockUpdateUseCase;
@@ -64,13 +66,14 @@ describe('CategoriesController', () => {
       is_active: true,
     };
 
-    const output = await controller.update(id, input);
+    const presenter = await controller.update(id, input);
 
     expect(mockUpdateUseCase.execute).toHaveBeenCalledWith({
       ...input,
       id,
     });
-    expect(output).toStrictEqual(expectedOutput);
+    expect(presenter).toBeInstanceOf(CategoryPresenter);
+    expect(presenter).toStrictEqual(new CategoryPresenter(output));
   });
 
   it('should delete a category', async () => {
@@ -93,7 +96,7 @@ describe('CategoriesController', () => {
   it('should gets a category', async () => {
     const id = '08b1c1ab-b817-4f7d-9ced-36c87c724d05';
 
-    const expectedOutput: GetCategoryUseCase.Output = {
+    const output: GetCategoryUseCase.Output = {
       id,
       name: 'Movie',
       description: 'some description',
@@ -102,16 +105,17 @@ describe('CategoriesController', () => {
     };
 
     const mockGetUseCase = {
-      execute: jest.fn().mockReturnValue(Promise.resolve(expectedOutput)),
+      execute: jest.fn().mockReturnValue(Promise.resolve(output)),
     };
     //@ts-expect-error
     controller['getUseCase'] = mockGetUseCase;
 
     expect(controller.findOne(id)).toBeInstanceOf(Promise);
-    const output = await controller.findOne(id);
+    const presenter = await controller.findOne(id);
 
     expect(mockGetUseCase.execute).toHaveBeenCalledWith({ id });
-    expect(output).toStrictEqual(expectedOutput);
+    expect(presenter).toBeInstanceOf(CategoryPresenter);
+    expect(presenter).toStrictEqual(new CategoryPresenter(output));
   });
 
   it('should list categories', async () => {

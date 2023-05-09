@@ -21,6 +21,7 @@ import {
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { SearchCategoryDto } from './dto/search-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CategoryPresenter } from './presenter/category.presenter';
 
 @Controller('categories')
 export class CategoriesController {
@@ -40,36 +41,41 @@ export class CategoriesController {
   private readonly deleteUseCase: DeleteCategoryUseCase.UseCase;
 
   @Post()
-  create(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.createUseCase.execute(createCategoryDto);
+  public async create(@Body() createCategoryDto: CreateCategoryDto) {
+    const output = await this.createUseCase.execute(createCategoryDto);
+    return new CategoryPresenter(output);
   }
 
   @Get()
-  search(@Query() searchParams: SearchCategoryDto) {
+  public async search(@Query() searchParams: SearchCategoryDto) {
     return this.listUseCase.execute(searchParams);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.getUseCase.execute({
+  public async findOne(@Param('id') id: string) {
+    const output = await this.getUseCase.execute({
       id,
     });
+
+    return new CategoryPresenter(output);
   }
 
   @Put(':id')
-  update(
+  public async update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    return this.updateUseCase.execute({
+    const output = await this.updateUseCase.execute({
       id,
       ...updateCategoryDto,
     });
+
+    return new CategoryPresenter(output);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  public async remove(@Param('id') id: string) {
     return this.deleteUseCase.execute({ id });
   }
 }
